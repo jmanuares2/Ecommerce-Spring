@@ -14,5 +14,5 @@ pause
 :runTests
 echo.
 echo Ejecutando Pruebas.postman_collection.json con Newman...
-newman run Pruebas.postman_collection.json
+newman run Pruebas.postman_collection.json --environment newman-environment.json
 pause

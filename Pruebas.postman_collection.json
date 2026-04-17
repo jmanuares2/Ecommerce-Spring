@@ -5,7 +5,127 @@
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
     "_exporter_id": "53190270"
   },
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "exec": [
+          "// Pre-request a nivel coleccion: inyecta el token JWT en el header Authorization",
+          "// en cada request que se ejecute. Si el token esta vacio, no agrega el header.",
+          "const token = pm.environment.get('jwt_token') || '';",
+          "if (token.trim().length > 0) {",
+          "    pm.request.headers.upsert({",
+          "        key: 'Authorization',",
+          "        value: 'Bearer ' + token.trim()",
+          "    });",
+          "}"
+        ],
+        "type": "text/javascript"
+      }
+    }
+  ],
   "item": [
+    {
+      "name": "Autenticacion",
+      "description": "IMPORTANTE: Ejecutar en este orden:\n1. 'RegistrarUsuario' → Crea la cuenta en la base de datos (solo la primera vez).\n2. 'Login' → Obtiene el token JWT y lo guarda automaticamente en la variable {{jwt_token}}.\nTodos los endpoints protegidos del resto de la coleccion usaran ese token sin necesidad de configuracion adicional.",
+      "item": [
+        {
+          "name": "RegistrarUsuario",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "// Verifica que el registro fue exitoso",
+                  "pm.test('Registro exitoso (200 OK)', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "console.log('Paso 1/2 completado: Usuario registrado. Ahora ejecuta Login para obtener el token.');"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"nombreUsuario\": \"nuevoUser\",\r\n  \"nombre\": \"Nuevo\",\r\n  \"apellido\": \"Usuario\",\r\n  \"email\": \"nuevo@email.com\",\r\n  \"password\": \"123456\"\r\n}\r\n",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "localhost:8080/api/auth/register",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "api",
+                "auth",
+                "register"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Login - Guarda Token Automaticamente",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "// Captura el token JWT, le quita espacios/saltos de linea y lo guarda en la variable de entorno.",
+                  "// El pre-request script de la coleccion lo inyecta automaticamente en todos los requests.",
+                  "const token = (pm.response.text() || '').trim();",
+                  "if (token.length > 0) {",
+                  "    pm.environment.set('jwt_token', token);",
+                  "    console.log('Token JWT guardado correctamente.');",
+                  "    pm.test('Login exitoso - Token recibido', function () {",
+                  "        pm.response.to.have.status(200);",
+                  "    });",
+                  "} else {",
+                  "    console.error('ERROR: No se recibio token. Verificar que XAMPP/MySQL este corriendo y el usuario exista.');",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"email\": \"nuevo@email.com\",\r\n  \"password\": \"123456\"\r\n}\r\n",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "localhost:8080/api/auth/login",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "api",
+                "auth",
+                "login"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
     {
       "name": "Categorias",
       "item": [
@@ -213,76 +333,6 @@
       "description": "Usuarios, aca se deberia poder acceder de acuerdo a lo que queramos, un usuario normal no deberia poder acceder, salvo a modificarse el mismo y obtener solo sus datos"
     },
     {
-      "name": "Registro",
-      "item": [
-        {
-          "name": "RegistrarUsuario",
-          "request": {
-            "method": "POST",
-            "header": [],
-            "body": {
-              "mode": "raw",
-              "raw": "{\r\n  \"nombreUsuario\": \"nuevoUser\",\r\n  \"nombre\": \"Nuevo\",\r\n  \"apellido\": \"Usuario\",\r\n  \"email\": \"nuevo@email.com\",\r\n  \"password\": \"123456\"\r\n}\r\n",
-              "options": {
-                "raw": {
-                  "language": "json"
-                }
-              }
-            },
-            "url": {
-              "raw": "localhost:8080/api/auth/register",
-              "host": [
-                "localhost"
-              ],
-              "port": "8080",
-              "path": [
-                "api",
-                "auth",
-                "register"
-              ]
-            }
-          },
-          "response": []
-        }
-      ],
-      "description": "Aqui podemos crear usuarios"
-    },
-    {
-      "name": "Login",
-      "item": [
-        {
-          "name": "Login",
-          "request": {
-            "method": "POST",
-            "header": [],
-            "body": {
-              "mode": "raw",
-              "raw": "{\r\n  \"email\": \"nuevo@email.com\",\r\n  \"password\": \"123456\"\r\n}\r\n",
-              "options": {
-                "raw": {
-                  "language": "json"
-                }
-              }
-            },
-            "url": {
-              "raw": "localhost:8080/api/auth/login",
-              "host": [
-                "localhost"
-              ],
-              "port": "8080",
-              "path": [
-                "api",
-                "auth",
-                "login"
-              ]
-            }
-          },
-          "response": []
-        }
-      ],
-      "description": "El login nos sirve para obtener el token que utilizaremos para autenticarnos con el usuario que queramos"
-    },
-    {
       "name": "Productos",
       "item": [
         {
@@ -362,7 +412,7 @@
             "header": [],
             "body": {
               "mode": "raw",
-              "raw": "{\r\n  \"nombre\": \"Remera Oversize Blanca\",\r\n  \"precio\": 55000,\r\n  \"stock\": 50,\r\n  \"categoriaId\": 1,\r\n  \"categoriaNombre\": \"Remeras\",\r\n  \"creadorId\": 1,\r\n  \"creadorNombre\": \"Admin System\"\r\n}",
+              "raw": "{\r\n  \"nombre\": \"Remera Oversize Blanca\",\r\n  \"descripcion\": \"Remera oversize color blanca\",\r\n  \"precio\": 55000,\r\n  \"stock\": 50,\r\n  \"imagenUrl\": \"https://ejemplo.com/remera.jpg\",\r\n  \"talle\": \"M\",\r\n  \"color\": \"Blanco\",\r\n  \"categoriaId\": 1\r\n}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -521,13 +571,7 @@
           "response": []
         }
       ],
-      "description": "Este es el carrito, aqui debemos utilizar un token de usuario para poder visualizar como seria su flujo",
-      "auth": {
-        "type": "bearer"
-      }
+      "description": "Este es el carrito, aqui debemos utilizar un token de usuario para poder visualizar como seria su flujo"
     }
-  ],
-  "auth": {
-    "type": "bearer"
-  }
+  ]
 }
