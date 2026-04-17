@@ -1,0 +1,506 @@
+{
+  "info": {
+    "_postman_id": "3de9de4a-550a-41cb-a6cc-01a36d279a61",
+    "name": "Pruebas",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "53190270"
+  },
+  "item": [
+    {
+      "name": "Categorias",
+      "item": [
+        {
+          "name": "ObtenerCategoriaID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "localhost:8080/api/categorias/3",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "api",
+                "categorias",
+                "3"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "CrearCategoria",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"nombre\": \"Buzos\"\r\n}\r\n",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "localhost:8080/api/categorias",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "api",
+                "categorias"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "CambiarNombre",
+          "request": {
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"nombre\": \"Buzos Oversize\"\r\n}\r\n",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "localhost:8080/api/categorias/4",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "api",
+                "categorias",
+                "4"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "EliminarCat",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": ""
+            }
+          },
+          "response": []
+        }
+      ],
+      "description": "Categorias, aca se deberia poder acceder de acuerdo a lo que queramos, un usuario no deberia poder eliminar categorias o incluso agregarlas si no tiene los permisos"
+    },
+    {
+      "name": "Usuarios",
+      "item": [
+        {
+          "name": "ObtenerUsu",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": ""
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "AgregarUsuario",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"nombreUsuario\": \"maria123\",\r\n  \"nombre\": \"Maria\",\r\n  \"apellido\": \"Lopez\",\r\n  \"email\": \"maria@gmail.com\",\r\n  \"password\": \"maria123\",\r\n  \"role\": \"USER\"\r\n}\r\n",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "localhost:8080/api/usuarios",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "api",
+                "usuarios"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "ModificarUsu",
+          "request": {
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"nombreUsuario\": \"mariachina\",\r\n  \"nombre\": \"Maria\",\r\n  \"apellido\": \"China\",\r\n  \"email\": \"maria@gmail.com\",\r\n  \"password\": \"maria123\",\r\n  \"role\": \"USER\"\r\n}\r\n",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "localhost:8080/api/usuarios/3",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "api",
+                "usuarios",
+                "3"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "EliminarUsuario",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "localhost:8080/api/usuarios/3",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "api",
+                "usuarios",
+                "3"
+              ]
+            }
+          },
+          "response": []
+        }
+      ],
+      "description": "Usuarios, aca se deberia poder acceder de acuerdo a lo que queramos, un usuario normal no deberia poder acceder, salvo a modificarse el mismo y obtener solo sus datos"
+    },
+    {
+      "name": "Registro",
+      "item": [
+        {
+          "name": "RegistrarUsuario",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"nombreUsuario\": \"nuevoUser\",\r\n  \"nombre\": \"Nuevo\",\r\n  \"apellido\": \"Usuario\",\r\n  \"email\": \"nuevo@email.com\",\r\n  \"password\": \"123456\"\r\n}\r\n",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "localhost:8080/api/auth/register",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "api",
+                "auth",
+                "register"
+              ]
+            }
+          },
+          "response": []
+        }
+      ],
+      "description": "Aqui podemos crear usuarios"
+    },
+    {
+      "name": "Login",
+      "item": [
+        {
+          "name": "Login",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"email\": \"nuevo@email.com\",\r\n  \"password\": \"123456\"\r\n}\r\n",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "localhost:8080/api/auth/login",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "api",
+                "auth",
+                "login"
+              ]
+            }
+          },
+          "response": []
+        }
+      ],
+      "description": "El login nos sirve para obtener el token que utilizaremos para autenticarnos con el usuario que queramos"
+    },
+    {
+      "name": "Productos",
+      "item": [
+        {
+          "name": "CrearProdu",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"nombre\": \"Campera Denim\",\r\n  \"descripcion\": \"Campera azul clasica\",\r\n  \"precio\": 55000,\r\n  \"stock\": 10,\r\n  \"imagenUrl\": \"https://ejemplo.com/campera.jpg\",\r\n  \"talle\": \"M\",\r\n  \"color\": \"Azul\",\r\n  \"categoriaId\": 1\r\n}\r\n",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:8080/api/productos",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "api",
+                "productos"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "ObtenerProductos",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "localhost:8080/api/productos/4",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "api",
+                "productos",
+                "4"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "ObtenerProductosPorCat",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "localhost:8080/api/productos/categoria/1",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "api",
+                "productos",
+                "categoria",
+                "1"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "ModificarProductos",
+          "request": {
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"nombre\": \"Remera Oversize Blanca\",\r\n  \"precio\": 55000,\r\n  \"stock\": 50,\r\n  \"categoriaId\": 1,\r\n  \"categoriaNombre\": \"Remeras\",\r\n  \"creadorId\": 1,\r\n  \"creadorNombre\": \"Admin System\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "localhost:8080/api/productos/1",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "api",
+                "productos",
+                "1"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "EliminarProducto",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8080/api/productos/3",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "api",
+                "productos",
+                "3"
+              ]
+            }
+          },
+          "response": []
+        }
+      ],
+      "description": "Productos, aca se deberia poder acceder de acuerdo a lo que queramos, un usuario no deberia poder eliminar productos si no tiene los permisos por ejemplo. Revisar token de auth para hacer pruebas"
+    },
+    {
+      "name": "Carrito",
+      "item": [
+        {
+          "name": "VerCarritoDeUsuario",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "localhost:8080/api/carrito",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "api",
+                "carrito"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "AgregarItemCarrito",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"productoId\": 1,\r\n  \"cantidad\": 1\r\n}\r\n",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "localhost:8080/api/carrito/items",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "api",
+                "carrito",
+                "items"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "EliminarItemCarrito",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "localhost:8080/api/carrito/items/1",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "api",
+                "carrito",
+                "items",
+                "1"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "VaciarCarrito",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "localhost:8080/api/carrito/clear",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "api",
+                "carrito",
+                "clear"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "CheckOut",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": ""
+            }
+          },
+          "response": []
+        }
+      ],
+      "description": "Este es el carrito, aqui debemos utilizar un token de usuario para poder visualizar como seria su flujo",
+      "auth": {
+        "type": "bearer"
+      }
+    }
+  ],
+  "auth": {
+    "type": "bearer"
+  }
+}
