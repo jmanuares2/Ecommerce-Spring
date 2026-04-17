@@ -9,10 +9,10 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.uade.tpo</groupId>
-	<artifactId>e-commerce3</artifactId>
+	<artifactId>uade-shop-api</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name/>
-	<description/>
+	<name>uade-shop-api</name>
+	<description>UADE Shop API - Ecommerce Spring Boot Application</description>
 	<url/>
 	<licenses>
 		<license/>
