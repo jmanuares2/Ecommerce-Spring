@@ -4,6 +4,8 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -29,7 +31,6 @@ public class AuthenticationService {
     private final JwtUtil jwtUtil;
 
     public String register(RegisterRequest request) {
-        // Validamos email y nombre de usuario para no duplicar cuentas.
         if (usuarioRepository.existsByEmail(request.getEmail())) {
             throw new RuntimeException("El email ya existe en la base de datos");
         }
@@ -43,9 +44,9 @@ public class AuthenticationService {
                 .nombre(request.getNombre())
                 .apellido(request.getApellido())
                 .email(request.getEmail())
-                // Guardamos la contraseña encriptada, nunca en texto plano.
                 .password(passwordEncoder.encode(request.getPassword()))
                 .role(Role.USER)
+                .activo(true)
                 .build();
 
         usuarioRepository.save(usuario);
@@ -53,11 +54,15 @@ public class AuthenticationService {
     }
 
     public String authenticate(LoginRequest request) {
-        // Si las credenciales no son correctas, Spring corta aca con excepción.
+        Usuario user = usuarioRepository.findByEmail(request.getEmail())
+                .orElseThrow(() -> new BadCredentialsException("Credenciales invalidas"));
+
+        if (!user.isEnabled()) {
+            throw new DisabledException("El usuario se encuentra deshabilitado");
+        }
+
         authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword()));
-
-        Usuario user = usuarioRepository.findByEmail(request.getEmail()).orElseThrow();
 
         Set<String> roles = user.getAuthorities().stream()
                 .map(grantedAuthority -> grantedAuthority.getAuthority())

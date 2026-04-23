@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -48,6 +49,17 @@ public class UsuarioController {
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteUsuarioById(@PathVariable Long id) {
         usuarioService.deleteUsuarioById(id);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+    @PatchMapping("/{id}/restaurar")
+    public ResponseEntity<UsuarioResponseDto> restoreUsuarioById(@PathVariable Long id) {
+        return new ResponseEntity<>(usuarioService.restoreUsuarioById(id), HttpStatus.OK);
+    }
+
+    @DeleteMapping("/{id}/definitivo")
+    public ResponseEntity<Void> hardDeleteUsuarioById(@PathVariable Long id) {
+        usuarioService.hardDeleteUsuarioById(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 }

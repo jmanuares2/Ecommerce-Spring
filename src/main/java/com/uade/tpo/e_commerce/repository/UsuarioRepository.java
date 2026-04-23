@@ -9,6 +9,7 @@ import com.uade.tpo.e_commerce.model.Usuario;
 public interface UsuarioRepository extends JpaRepository<Usuario, Long> {
 
     Optional<Usuario> findByEmail(String email);
+    Optional<Usuario> findByEmailAndActivoTrue(String email);
     Optional<Usuario> findByNombreUsuario(String nombreUsuario);
 
     Boolean existsByEmail(String email);

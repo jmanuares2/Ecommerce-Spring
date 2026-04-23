@@ -1,5 +1,6 @@
 package com.uade.tpo.e_commerce.service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -49,6 +50,7 @@ public class UsuarioService {
                 .email(dto.getEmail())
                 .password(passwordEncoder.encode(dto.getPassword()))
                 .role(dto.getRole() != null ? dto.getRole() : Role.USER)
+                .activo(true)
                 .build();
 
         return mapToDto(usuarioRepository.save(usuario));
@@ -74,11 +76,38 @@ public class UsuarioService {
     }
 
     public void deleteUsuarioById(Long id) {
+        softDeleteUsuarioById(id);
+    }
+
+    public void softDeleteUsuarioById(Long id) {
+        Usuario usuario = usuarioRepository.findById(id)
+                .orElseThrow(() -> new UsuarioNotFoundException(id));
+
+        if (!usuario.isActivo()) {
+            return;
+        }
+
+        usuario.setActivo(false);
+        usuario.setFechaBaja(LocalDateTime.now());
+        usuarioRepository.save(usuario);
+    }
+
+    public UsuarioResponseDto restoreUsuarioById(Long id) {
+        Usuario usuario = usuarioRepository.findById(id)
+                .orElseThrow(() -> new UsuarioNotFoundException(id));
+
+        usuario.setActivo(true);
+        usuario.setFechaBaja(null);
+
+        return mapToDto(usuarioRepository.save(usuario));
+    }
+
+    public void hardDeleteUsuarioById(Long id) {
         Usuario usuario = usuarioRepository.findById(id)
                 .orElseThrow(() -> new UsuarioNotFoundException(id));
 
         if (usuario.getProductosPublicados() != null && !usuario.getProductosPublicados().isEmpty()) {
-            throw new IllegalArgumentException("No se puede eliminar un usuario con productos publicados");
+            throw new IllegalArgumentException("No se puede eliminar definitivamente un usuario con productos publicados");
         }
 
         usuarioRepository.delete(usuario);
@@ -121,10 +150,13 @@ public class UsuarioService {
     private UsuarioResponseDto mapToDto(Usuario usuario) {
         return UsuarioResponseDto.builder()
                 .id(usuario.getId())
+                .nombreUsuario(usuario.getNombreUsuario())
                 .nombre(usuario.getNombre())
                 .apellido(usuario.getApellido())
                 .email(usuario.getEmail())
                 .role(usuario.getRole())
+                .activo(usuario.isActivo())
+                .fechaBaja(usuario.getFechaBaja())
                 .build();
     }
 }

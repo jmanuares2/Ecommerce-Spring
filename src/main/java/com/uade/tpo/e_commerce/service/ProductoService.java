@@ -148,7 +148,7 @@ public class ProductoService {
     private Usuario obtenerUsuarioAutenticado() {
         String email = SecurityContextHolder.getContext().getAuthentication().getName();
 
-        return usuarioRepository.findByEmail(email)
+        return usuarioRepository.findByEmailAndActivoTrue(email)
                 .orElseThrow(() -> new RuntimeException("Usuario autenticado no encontrado"));
     }
 

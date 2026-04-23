@@ -1,5 +1,6 @@
 package com.uade.tpo.e_commerce.model;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -53,6 +54,12 @@ public class Usuario implements UserDetails {
     @Enumerated(EnumType.STRING)
     private Role role;
 
+    @Builder.Default
+    @Column(nullable = false)
+    private boolean activo = true;
+
+    private LocalDateTime fechaBaja;
+
     @JsonIgnore
     @OneToOne(mappedBy = "usuario", cascade = CascadeType.ALL)
     private Carrito carrito;
@@ -89,6 +96,6 @@ public class Usuario implements UserDetails {
 
     @Override
     public boolean isEnabled() {
-        return true;
+        return activo;
     }
 }

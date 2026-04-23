@@ -122,7 +122,7 @@ public class CarritoService {
     }
 
     private Carrito getOrCreateCarrito(String email) {
-        Usuario usuario = usuarioRepository.findByEmail(email)
+        Usuario usuario = usuarioRepository.findByEmailAndActivoTrue(email)
                 .orElseThrow(() -> new IllegalArgumentException("Usuario no encontrado"));
         return carritoRepository.findByUsuario(usuario).orElseGet(() -> {
             Carrito newCarrito = Carrito.builder().usuario(usuario).montoTotal(0.0).build();
