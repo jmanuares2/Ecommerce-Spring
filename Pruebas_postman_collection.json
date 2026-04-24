@@ -30,19 +30,73 @@
       "description": "Ejecutar primero 'Login Admin - Guarda Token'. El token ADMIN se usa en toda la coleccion automaticamente.",
       "item": [
         {
+          "name": "Register - Nuevo Usuario",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Registro exitoso (201)', function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});",
+                  "const json = pm.response.json();",
+                  "if (json && json.userId) {",
+                  "    pm.environment.set('usuario_registrado_id', json.userId);",
+                  "    pm.environment.set('jwt_token', json.token);",
+                  "    console.log('Usuario registrado - ID:', json.userId, '| Role:', json.role);",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nombreUsuario\": \"juantest\",\n  \"nombre\": \"Juan\",\n  \"apellido\": \"Test\",\n  \"email\": \"juan@test.com\",\n  \"password\": \"juan123\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "localhost:8080/api/auth/register",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "api",
+                "auth",
+                "register"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
           "name": "Login Admin - Guarda Token",
           "event": [
             {
               "listen": "test",
               "script": {
                 "exec": [
-                  "const token = (pm.response.text() || '').trim();",
-                  "if (token.length > 0) {",
-                  "    pm.environment.set('jwt_token', token);",
-                  "    console.log('Token ADMIN guardado correctamente en jwt_token.');",
-                  "    pm.test('Login Admin exitoso - Token recibido', function () {",
-                  "        pm.response.to.have.status(200);",
-                  "    });",
+                  "pm.test('Login Admin exitoso (200)', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "const json = pm.response.json();",
+                  "if (json && json.token) {",
+                  "    pm.environment.set('jwt_token', json.token);",
+                  "    pm.environment.set('usuario_logueado_id', json.userId);",
+                  "    console.log('Login OK - ID:', json.userId, '| Role:', json.role);",
                   "} else {",
                   "    console.error('ERROR: No se recibio token. Verificar XAMPP/MySQL y que exista el usuario admin (DataSeedingConfig).');",
                   "}"
@@ -70,9 +124,15 @@
             },
             "url": {
               "raw": "localhost:8080/api/auth/login",
-              "host": ["localhost"],
+              "host": [
+                "localhost"
+              ],
               "port": "8080",
-              "path": ["api", "auth", "login"]
+              "path": [
+                "api",
+                "auth",
+                "login"
+              ]
             }
           },
           "response": []
@@ -90,9 +150,15 @@
             "header": [],
             "url": {
               "raw": "localhost:8080/api/categorias/1",
-              "host": ["localhost"],
+              "host": [
+                "localhost"
+              ],
               "port": "8080",
-              "path": ["api", "categorias", "1"]
+              "path": [
+                "api",
+                "categorias",
+                "1"
+              ]
             }
           },
           "response": []
@@ -132,9 +198,14 @@
             },
             "url": {
               "raw": "localhost:8080/api/categorias",
-              "host": ["localhost"],
+              "host": [
+                "localhost"
+              ],
               "port": "8080",
-              "path": ["api", "categorias"]
+              "path": [
+                "api",
+                "categorias"
+              ]
             }
           },
           "response": []
@@ -155,9 +226,15 @@
             },
             "url": {
               "raw": "localhost:8080/api/categorias/{{categoria_id}}",
-              "host": ["localhost"],
+              "host": [
+                "localhost"
+              ],
               "port": "8080",
-              "path": ["api", "categorias", "{{categoria_id}}"]
+              "path": [
+                "api",
+                "categorias",
+                "{{categoria_id}}"
+              ]
             }
           },
           "response": []
@@ -169,9 +246,15 @@
             "header": [],
             "url": {
               "raw": "localhost:8080/api/categorias/{{categoria_id}}",
-              "host": ["localhost"],
+              "host": [
+                "localhost"
+              ],
               "port": "8080",
-              "path": ["api", "categorias", "{{categoria_id}}"]
+              "path": [
+                "api",
+                "categorias",
+                "{{categoria_id}}"
+              ]
             }
           },
           "response": []
@@ -217,9 +300,14 @@
             },
             "url": {
               "raw": "localhost:8080/api/usuarios",
-              "host": ["localhost"],
+              "host": [
+                "localhost"
+              ],
               "port": "8080",
-              "path": ["api", "usuarios"]
+              "path": [
+                "api",
+                "usuarios"
+              ]
             }
           },
           "response": []
@@ -231,9 +319,15 @@
             "header": [],
             "url": {
               "raw": "localhost:8080/api/usuarios/{{usuario_id}}",
-              "host": ["localhost"],
+              "host": [
+                "localhost"
+              ],
               "port": "8080",
-              "path": ["api", "usuarios", "{{usuario_id}}"]
+              "path": [
+                "api",
+                "usuarios",
+                "{{usuario_id}}"
+              ]
             }
           },
           "response": []
@@ -254,23 +348,159 @@
             },
             "url": {
               "raw": "localhost:8080/api/usuarios/{{usuario_id}}",
-              "host": ["localhost"],
+              "host": [
+                "localhost"
+              ],
               "port": "8080",
-              "path": ["api", "usuarios", "{{usuario_id}}"]
+              "path": [
+                "api",
+                "usuarios",
+                "{{usuario_id}}"
+              ]
             }
           },
           "response": []
         },
         {
-          "name": "EliminarUsuario",
+          "name": "SoftEliminarUsuario",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Usuario eliminado (soft delete) - Status 204', function () {",
+                  "    pm.response.to.have.status(204);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
           "request": {
             "method": "DELETE",
             "header": [],
             "url": {
               "raw": "localhost:8080/api/usuarios/{{usuario_id}}",
-              "host": ["localhost"],
+              "host": [
+                "localhost"
+              ],
               "port": "8080",
-              "path": ["api", "usuarios", "{{usuario_id}}"]
+              "path": [
+                "api",
+                "usuarios",
+                "{{usuario_id}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "VerificarUsuarioEliminado",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Obtener usuario retorna 200', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test('El usuario tiene activo=false y fechaBaja', function () {",
+                  "    const json = pm.response.json();",
+                  "    pm.expect(json.activo).to.be.false;",
+                  "    pm.expect(json.fechaBaja).to.not.be.null;",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "localhost:8080/api/usuarios/{{usuario_id}}",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "api",
+                "usuarios",
+                "{{usuario_id}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "RestaurarUsuario",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Restaurar usuario retorna 200', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test('El usuario vuelve a estar activo', function () {",
+                  "    const json = pm.response.json();",
+                  "    pm.expect(json.activo).to.be.true;",
+                  "    pm.expect(json.fechaBaja).to.be.null;",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "url": {
+              "raw": "localhost:8080/api/usuarios/{{usuario_id}}/restaurar",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "api",
+                "usuarios",
+                "{{usuario_id}}",
+                "restaurar"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "EliminarUsuarioDefinitivo",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Eliminacion definitiva - Status 204', function () {",
+                  "    pm.response.to.have.status(204);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "localhost:8080/api/usuarios/{{usuario_id}}/definitivo",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "api",
+                "usuarios",
+                "{{usuario_id}}",
+                "definitivo"
+              ]
             }
           },
           "response": []
@@ -316,9 +546,14 @@
             },
             "url": {
               "raw": "localhost:8080/api/productos",
-              "host": ["localhost"],
+              "host": [
+                "localhost"
+              ],
               "port": "8080",
-              "path": ["api", "productos"]
+              "path": [
+                "api",
+                "productos"
+              ]
             }
           },
           "response": []
@@ -330,9 +565,15 @@
             "header": [],
             "url": {
               "raw": "localhost:8080/api/productos/{{producto_id}}",
-              "host": ["localhost"],
+              "host": [
+                "localhost"
+              ],
               "port": "8080",
-              "path": ["api", "productos", "{{producto_id}}"]
+              "path": [
+                "api",
+                "productos",
+                "{{producto_id}}"
+              ]
             }
           },
           "response": []
@@ -344,9 +585,16 @@
             "header": [],
             "url": {
               "raw": "localhost:8080/api/productos/categoria/1",
-              "host": ["localhost"],
+              "host": [
+                "localhost"
+              ],
               "port": "8080",
-              "path": ["api", "productos", "categoria", "1"]
+              "path": [
+                "api",
+                "productos",
+                "categoria",
+                "1"
+              ]
             }
           },
           "response": []
@@ -367,9 +615,15 @@
             },
             "url": {
               "raw": "localhost:8080/api/productos/1",
-              "host": ["localhost"],
+              "host": [
+                "localhost"
+              ],
               "port": "8080",
-              "path": ["api", "productos", "1"]
+              "path": [
+                "api",
+                "productos",
+                "1"
+              ]
             }
           },
           "response": []
@@ -381,9 +635,15 @@
             "header": [],
             "url": {
               "raw": "localhost:8080/api/productos/{{producto_id}}",
-              "host": ["localhost"],
+              "host": [
+                "localhost"
+              ],
               "port": "8080",
-              "path": ["api", "productos", "{{producto_id}}"]
+              "path": [
+                "api",
+                "productos",
+                "{{producto_id}}"
+              ]
             }
           },
           "response": []
@@ -401,9 +661,14 @@
             "header": [],
             "url": {
               "raw": "localhost:8080/api/carrito",
-              "host": ["localhost"],
+              "host": [
+                "localhost"
+              ],
               "port": "8080",
-              "path": ["api", "carrito"]
+              "path": [
+                "api",
+                "carrito"
+              ]
             }
           },
           "response": []
@@ -441,9 +706,15 @@
             },
             "url": {
               "raw": "localhost:8080/api/carrito/items",
-              "host": ["localhost"],
+              "host": [
+                "localhost"
+              ],
               "port": "8080",
-              "path": ["api", "carrito", "items"]
+              "path": [
+                "api",
+                "carrito",
+                "items"
+              ]
             }
           },
           "response": []
@@ -468,9 +739,15 @@
             "header": [],
             "url": {
               "raw": "localhost:8080/api/carrito/checkout",
-              "host": ["localhost"],
+              "host": [
+                "localhost"
+              ],
               "port": "8080",
-              "path": ["api", "carrito", "checkout"]
+              "path": [
+                "api",
+                "carrito",
+                "checkout"
+              ]
             }
           },
           "response": []
@@ -507,9 +784,15 @@
             },
             "url": {
               "raw": "localhost:8080/api/carrito/items",
-              "host": ["localhost"],
+              "host": [
+                "localhost"
+              ],
               "port": "8080",
-              "path": ["api", "carrito", "items"]
+              "path": [
+                "api",
+                "carrito",
+                "items"
+              ]
             }
           },
           "response": []
@@ -521,9 +804,16 @@
             "header": [],
             "url": {
               "raw": "localhost:8080/api/carrito/items/{{carrito_item_id}}",
-              "host": ["localhost"],
+              "host": [
+                "localhost"
+              ],
               "port": "8080",
-              "path": ["api", "carrito", "items", "{{carrito_item_id}}"]
+              "path": [
+                "api",
+                "carrito",
+                "items",
+                "{{carrito_item_id}}"
+              ]
             }
           },
           "response": []
@@ -535,9 +825,15 @@
             "header": [],
             "url": {
               "raw": "localhost:8080/api/carrito/clear",
-              "host": ["localhost"],
+              "host": [
+                "localhost"
+              ],
               "port": "8080",
-              "path": ["api", "carrito", "clear"]
+              "path": [
+                "api",
+                "carrito",
+                "clear"
+              ]
             }
           },
           "response": []

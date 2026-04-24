@@ -10,6 +10,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import com.uade.tpo.e_commerce.dto.AuthResponse;
 import com.uade.tpo.e_commerce.dto.LoginRequest;
 import com.uade.tpo.e_commerce.dto.RegisterRequest;
 import com.uade.tpo.e_commerce.model.Role;
@@ -30,7 +31,7 @@ public class AuthenticationService {
     private final AuthenticationManager authenticationManager;
     private final JwtUtil jwtUtil;
 
-    public String register(RegisterRequest request) {
+    public AuthResponse register(RegisterRequest request) {
         if (usuarioRepository.existsByEmail(request.getEmail())) {
             throw new RuntimeException("El email ya existe en la base de datos");
         }
@@ -49,11 +50,22 @@ public class AuthenticationService {
                 .activo(true)
                 .build();
 
-        usuarioRepository.save(usuario);
-        return "User registered successfully";
+        usuario = usuarioRepository.save(usuario);
+
+        Set<String> roles = usuario.getAuthorities().stream()
+                .map(grantedAuthority -> grantedAuthority.getAuthority())
+                .collect(Collectors.toSet());
+
+        String token = jwtUtil.generateToken(usuario.getEmail(), roles);
+
+        return AuthResponse.builder()
+                .userId(usuario.getId())
+                .token(token)
+                .role(usuario.getRole().name())
+                .build();
     }
 
-    public String authenticate(LoginRequest request) {
+    public AuthResponse authenticate(LoginRequest request) {
         Usuario user = usuarioRepository.findByEmail(request.getEmail())
                 .orElseThrow(() -> new BadCredentialsException("Credenciales invalidas"));
 
@@ -68,6 +80,12 @@ public class AuthenticationService {
                 .map(grantedAuthority -> grantedAuthority.getAuthority())
                 .collect(Collectors.toSet());
 
-        return jwtUtil.generateToken(user.getEmail(), roles);
+        String token = jwtUtil.generateToken(user.getEmail(), roles);
+
+        return AuthResponse.builder()
+                .userId(user.getId())
+                .token(token)
+                .role(user.getRole().name())
+                .build();
     }
 }

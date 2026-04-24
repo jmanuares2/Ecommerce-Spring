@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.authentication.BadCredentialsException;
 
+import com.uade.tpo.e_commerce.dto.AuthResponse;
 import com.uade.tpo.e_commerce.dto.LoginRequest;
 import com.uade.tpo.e_commerce.dto.RegisterRequest;
 import com.uade.tpo.e_commerce.model.Role;
@@ -55,7 +56,7 @@ class AuthenticationServiceTest {
         request.setEmail("new@test.com");
         request.setPassword("123456");
 
-        String response = authenticationService.register(request);
+        AuthResponse response = authenticationService.register(request);
 
         assertEquals("User registered successfully", response);
         assertNotNull(usuarioRepository.findByEmail("new@test.com").orElse(null));
@@ -83,9 +84,12 @@ class AuthenticationServiceTest {
         request.setEmail("test@test.com");
         request.setPassword("password123");
 
-        String token = authenticationService.authenticate(request);
+        AuthResponse response = authenticationService.authenticate(request);
 
-        assertNotNull(token);
+        assertNotNull(response);
+        assertNotNull(response.getToken());
+        assertNotNull(response.getUserId());
+        assertNotNull(response.getRole());
     }
 
     @Test
