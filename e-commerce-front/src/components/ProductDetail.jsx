@@ -1,0 +1,98 @@
+import { useState, useEffect } from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
+import { API_URL, authHeaders } from '../services/api';
+import { useAuth } from '../context/AuthContext';
+
+function ProductDetail() {
+  const { id } = useParams();
+  const navigate = useNavigate();
+  const { user } = useAuth();
+  const [product, setProduct] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    const fetchProduct = async () => {
+      try {
+        const response = await fetch(`${API_URL}/productos/${id}`);
+        if (!response.ok) throw new Error('Producto no encontrado');
+        const data = await response.json();
+        setProduct(data);
+      } catch (err) {
+        setError(err.message);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchProduct();
+  }, [id]);
+
+  const handleAddToCart = async () => {
+    try {
+      const response = await fetch(`${API_URL}/carrito/items`, {
+        method: 'POST',
+        headers: authHeaders(),
+        body: JSON.stringify({ productoId: product.id, cantidad: 1 }),
+      });
+      if (!response.ok) throw new Error('No se pudo agregar al carrito');
+      alert('Producto agregado al carrito');
+    } catch (err) {
+      alert(err.message);
+    }
+  };
+
+  if (loading) return (
+    <div className="container mt-5 text-center">
+      <div className="spinner-border text-primary" role="status"></div>
+    </div>
+  );
+  if (error) return <div className="container mt-4"><p className="text-danger">{error}</p></div>;
+  if (!product) return null;
+
+  return (
+    <div className="container mt-4">
+      <button className="btn btn-outline-secondary mb-3" onClick={() => navigate(-1)}>
+        &larr; Volver
+      </button>
+      <div className="row">
+        <div className="col-md-6">
+          {product.imagenUrl ? (
+            <img src={product.imagenUrl} alt={product.nombre} className="img-fluid rounded" />
+          ) : (
+            <div className="bg-light rounded d-flex align-items-center justify-content-center" style={{ height: '300px' }}>
+              <span className="text-muted">Sin imagen</span>
+            </div>
+          )}
+        </div>
+        <div className="col-md-6">
+          <h2>{product.nombre}</h2>
+          {product.categoriaNombre && (
+            <span className="badge bg-secondary mb-2">{product.categoriaNombre}</span>
+          )}
+          <p className="text-muted">{product.descripcion}</p>
+          {product.talle && <p><strong>Talle:</strong> {product.talle}</p>}
+          {product.color && <p><strong>Color:</strong> {product.color}</p>}
+          <h3 className="text-primary">${product.precio?.toFixed(2)}</h3>
+          <p className={product.stock > 0 ? 'text-success' : 'text-danger'}>
+            {product.stock > 0 ? `Stock disponible: ${product.stock}` : 'Sin stock'}
+          </p>
+          {product.creadorNombre && (
+            <p className="text-muted"><small>Vendido por: {product.creadorNombre}</small></p>
+          )}
+          {user && product.stock > 0 && (
+            <button className="btn btn-primary mt-2" onClick={handleAddToCart}>
+              Agregar al carrito
+            </button>
+          )}
+          {!user && (
+            <p className="mt-3 text-muted">
+              <a href="/login">Iniciá sesión</a> para comprar este producto.
+            </p>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+export default ProductDetail;
