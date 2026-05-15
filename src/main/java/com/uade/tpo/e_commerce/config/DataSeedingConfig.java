@@ -68,14 +68,15 @@ public class DataSeedingConfig {
 
                 if (productoRepository.count() == 0) {
                     Usuario creador = usuarioRepository.findByEmail("admin@tienda.com")
-                            .orElseThrow(() -> new IllegalStateException("No existe usuario admin para seed de productos"));
+                            .orElseThrow(
+                                    () -> new IllegalStateException("No existe usuario admin para seed de productos"));
 
                     Producto p1 = Producto.builder()
                             .nombre("Remera Oversize Negra")
                             .descripcion("Remera 100% algodon, fit oversize")
                             .precio(25000.0)
                             .stock(50)
-                            .imagenUrl("https://ejemplo.com/remera-negra.jpg")
+                            .imagenUrl("https://picsum.photos/seed/producto1/400/600")
                             .talle("L")
                             .color("Negro")
                             .categoria(remeras)
@@ -87,7 +88,7 @@ public class DataSeedingConfig {
                             .descripcion("Pantalon cargo de gabardina")
                             .precio(45000.0)
                             .stock(20)
-                            .imagenUrl("https://ejemplo.com/cargo.jpg")
+                            .imagenUrl("https://picsum.photos/seed/producto2/400/600")
                             .talle("42")
                             .color("Verde")
                             .categoria(pantalones)
