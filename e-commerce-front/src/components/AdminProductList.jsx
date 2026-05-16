@@ -37,8 +37,10 @@ function AdminProductList() {
     fetchProducts();
   }, []);
 
+  const [deleteError, setDeleteError] = useState(null);
+
   const handleDelete = async (id) => {
-    if (!window.confirm('¿Estás seguro de que querés eliminar este producto?')) return;
+    setDeleteError(null);
     try {
       const response = await fetch(`${API_URL}/productos/${id}`, {
         method: 'DELETE',
@@ -47,7 +49,7 @@ function AdminProductList() {
       if (!response.ok) throw new Error('Error al eliminar');
       setProducts(products.filter((p) => p.id !== id));
     } catch (err) {
-      alert(err.message);
+      setDeleteError(err.message);
     }
   };
 
@@ -94,6 +96,7 @@ function AdminProductList() {
         </div>
       )}
       {error && <p className="text-danger">{error}</p>}
+      {deleteError && <div className="alert alert-danger">{deleteError}</div>}
 
       {!loading && !error && (
         <div className="table-responsive">

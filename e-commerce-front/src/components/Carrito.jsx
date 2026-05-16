@@ -10,6 +10,7 @@ function Carrito() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [checkoutMsg, setCheckoutMsg] = useState(null);
+  const [errorMsg, setErrorMsg] = useState(null);
 
   useEffect(() => {
     if (!user) { navigate('/login'); return; }
@@ -31,6 +32,7 @@ function Carrito() {
   };
 
   const handleRemoveItem = async (itemId) => {
+    setErrorMsg(null);
     try {
       const response = await fetch(`${API_URL}/carrito/items/${itemId}`, {
         method: 'DELETE',
@@ -39,12 +41,12 @@ function Carrito() {
       if (!response.ok) throw new Error('Error al eliminar el item');
       setCarrito(await response.json());
     } catch (err) {
-      alert(err.message);
+      setErrorMsg(err.message);
     }
   };
 
   const handleClear = async () => {
-    if (!window.confirm('¿Vaciar el carrito?')) return;
+    setErrorMsg(null);
     try {
       const response = await fetch(`${API_URL}/carrito/clear`, {
         method: 'DELETE',
@@ -53,11 +55,12 @@ function Carrito() {
       if (!response.ok) throw new Error('Error al vaciar el carrito');
       setCarrito(await response.json());
     } catch (err) {
-      alert(err.message);
+      setErrorMsg(err.message);
     }
   };
 
   const handleCheckout = async () => {
+    setErrorMsg(null);
     try {
       const response = await fetch(`${API_URL}/carrito/checkout`, {
         method: 'POST',
@@ -68,7 +71,7 @@ function Carrito() {
       setCheckoutMsg(msg);
       fetchCarrito();
     } catch (err) {
-      alert(err.message);
+      setErrorMsg(err.message);
     }
   };
 
@@ -90,6 +93,13 @@ function Carrito() {
         <div className="alert alert-success alert-dismissible">
           {checkoutMsg}
           <button type="button" className="btn-close" onClick={() => setCheckoutMsg(null)}></button>
+        </div>
+      )}
+
+      {errorMsg && (
+        <div className="alert alert-danger alert-dismissible">
+          {errorMsg}
+          <button type="button" className="btn-close" onClick={() => setErrorMsg(null)}></button>
         </div>
       )}
 
@@ -133,7 +143,7 @@ function Carrito() {
           </div>
 
           <div className="d-flex justify-content-between align-items-center">
-            <button className="btn btn-outline-secondary" onClick={handleClear}>
+            <button className="btn btn-outline-danger" onClick={handleClear}>
               Vaciar carrito
             </button>
             <div className="text-end">

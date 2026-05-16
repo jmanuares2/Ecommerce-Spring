@@ -1,9 +1,18 @@
+import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { API_URL, authHeaders } from '../services/api';
 
 function ProductCard({ product, onAddToCart }) {
   const { user } = useAuth();
+  const [msg, setMsg] = useState(null);
+  const [msgType, setMsgType] = useState('success');
+
+  const showMsg = (text, type = 'success') => {
+    setMsg(text);
+    setMsgType(type);
+    setTimeout(() => setMsg(null), 3000);
+  };
 
   const handleAddToCart = async () => {
     if (!user) return;
@@ -15,9 +24,9 @@ function ProductCard({ product, onAddToCart }) {
       });
       if (!response.ok) throw new Error('No se pudo agregar al carrito');
       if (onAddToCart) onAddToCart();
-      alert('Producto agregado al carrito');
+      showMsg('Producto agregado al carrito');
     } catch (err) {
-      alert(err.message);
+      showMsg(err.message, 'danger');
     }
   };
 
@@ -38,6 +47,11 @@ function ProductCard({ product, onAddToCart }) {
         <p className="card-text"><small className={product.stock > 0 ? 'text-success' : 'text-danger'}>
           {product.stock > 0 ? `Stock: ${product.stock}` : 'Sin stock'}
         </small></p>
+        {msg && (
+          <div className={`alert alert-${msgType} py-1 px-2 mb-2`} style={{ fontSize: '0.8rem' }}>
+            {msg}
+          </div>
+        )}
         <div className="d-flex gap-2 mt-2">
           <Link to={`/productos/${product.id}`} className="btn btn-outline-primary btn-sm flex-fill">
             Ver detalle
