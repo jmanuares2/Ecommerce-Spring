@@ -1,5 +1,5 @@
 import { useAuth } from '../context/AuthContext';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 
 function Profile() {
   const { user, logout } = useAuth();
@@ -8,7 +8,7 @@ function Profile() {
   if (!user) {
     return (
       <div className="container mt-4">
-        <p>Debés <a href="/login">iniciar sesión</a> para ver tu perfil.</p>
+        <p>Debés <Link to="/login">iniciar sesión</Link> para ver tu perfil.</p>
       </div>
     );
   }

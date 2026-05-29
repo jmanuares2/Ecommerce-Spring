@@ -1,6 +1,7 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { AuthProvider } from './context/AuthContext';
 import Navbar from './components/Navbar';
+import Home from './components/Home';
 import ProductList from './components/ProductList';
 import ProductDetail from './components/ProductDetail';
 import Login from './components/Login';
@@ -15,11 +16,12 @@ function App() {
       <BrowserRouter>
         <Navbar />
         <Routes>
-          <Route path="/" element={<ProductList />} />
+          <Route path="/" element={<Home />} />
+          <Route path="/productos" element={<ProductList />} />
           <Route path="/productos/:id" element={<ProductDetail />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
-          <Route path="/perfil" element={<Profile />} />
+          <Route path="/profile" element={<Profile />} />
           <Route path="/carrito" element={<Carrito />} />
           <Route path="/admin/productos" element={<AdminProductList />} />
         </Routes>

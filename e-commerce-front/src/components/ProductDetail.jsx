@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate, Link } from 'react-router-dom';
 import { API_URL, authHeaders } from '../services/api';
 import { useAuth } from '../context/AuthContext';
 
@@ -86,7 +86,7 @@ function ProductDetail() {
           )}
           {!user && (
             <p className="mt-3 text-muted">
-              <a href="/login">Iniciá sesión</a> para comprar este producto.
+              <Link to="/login">Iniciá sesión</Link> para comprar este producto.
             </p>
           )}
         </div>
