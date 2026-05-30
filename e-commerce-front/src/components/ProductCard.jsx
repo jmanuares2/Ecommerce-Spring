@@ -1,12 +1,21 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import { useFavorite } from '../context/FavoriteContext';
 import { API_URL, authHeaders } from '../services/api';
 
 function ProductCard({ product, onAddToCart }) {
   const { user } = useAuth();
+
+  // Usamos el contexto de favoritos para leer la lista actual
+  // y para poder agregar/quitar este producto.
+  const { favoriteItems, addToFavorite } = useFavorite();
   const [msg, setMsg] = useState(null);
   const [msgType, setMsgType] = useState('success');
+
+  // Revisamos si este producto ya esta en favoritos.
+  // Eso sirve para pintar el boton lleno o vacio.
+  const isFavorite = favoriteItems.some((item) => item.id === product.id);
 
   const showMsg = (text, type = 'success') => {
     setMsg(text);
@@ -56,6 +65,17 @@ function ProductCard({ product, onAddToCart }) {
           <Link to={`/productos/${product.id}`} className="btn btn-outline-primary btn-sm flex-fill">
             Ver detalle
           </Link>
+          {/* El corazon solo aparece si el usuario esta logueado.
+              Al tocarlo llamamos a addToFavorite(product). */}
+          {user && (
+            <button
+              className={isFavorite ? 'btn btn-danger btn-sm' : 'btn btn-outline-danger btn-sm'}
+              onClick={() => addToFavorite(product)}
+              title={isFavorite ? 'Quitar de favoritos' : 'Agregar a favoritos'}
+            >
+              {isFavorite ? '♥' : '♡'}
+            </button>
+          )}
           {user && product.stock > 0 && (
             <button className="btn btn-primary btn-sm flex-fill" onClick={handleAddToCart}>
               Agregar al carrito

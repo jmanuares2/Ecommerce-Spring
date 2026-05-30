@@ -102,7 +102,7 @@ function Home() {
 
         {/* Footer */}
         <div style={{ background: '#111', color: '#fff', padding: '18px 24px', textAlign: 'center' }}>
-          <p style={{ fontSize: 12, opacity: 0.4, letterSpacing: '0.06em' }}>© 2025 UADE Shop — Todos los derechos reservados</p>
+          <p style={{ fontSize: 12, opacity: 0.4, letterSpacing: '0.06em' }}>© 2026 UADE Shop — Todos los derechos reservados</p>
         </div>
 
       </div>

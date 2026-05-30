@@ -2,11 +2,19 @@ import { useState, useEffect } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import { API_URL, authHeaders } from '../services/api';
 import { useAuth } from '../context/AuthContext';
+import { useFavorite } from '../context/FavoriteContext';
 
 function ProductDetail() {
+  // useParams lee parametros de la URL.
+  // En este caso toma el id de /productos/:id.
   const { id } = useParams();
+
+  // useNavigate permite movernos entre pantallas desde funciones.
   const navigate = useNavigate();
   const { user } = useAuth();
+
+  // Traemos favoritos para poder usar el corazon tambien en el detalle.
+  const { favoriteItems, addToFavorite } = useFavorite();
   const [product, setProduct] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -49,6 +57,9 @@ function ProductDetail() {
   if (error) return <div className="container mt-4"><p className="text-danger">{error}</p></div>;
   if (!product) return null;
 
+  // Calculamos si el producto del detalle ya esta marcado como favorito.
+  const isFavorite = favoriteItems.some((item) => item.id === product.id);
+
   return (
     <div className="container mt-4">
       <button className="btn btn-outline-secondary mb-3" onClick={() => navigate(-1)}>
@@ -79,10 +90,23 @@ function ProductDetail() {
           {product.creadorNombre && (
             <p className="text-muted"><small>Vendido por: {product.creadorNombre}</small></p>
           )}
-          {user && product.stock > 0 && (
-            <button className="btn btn-primary mt-2" onClick={handleAddToCart}>
-              Agregar al carrito
-            </button>
+          {/* Renderizado condicional:
+              si hay usuario, mostramos acciones de compra/favoritos.
+              si no hay usuario, abajo mostramos el mensaje para iniciar sesion. */}
+          {user && (
+            <div className="d-flex gap-2 mt-2">
+              <button
+                className={isFavorite ? 'btn btn-danger' : 'btn btn-outline-danger'}
+                onClick={() => addToFavorite(product)}
+              >
+                {isFavorite ? '♥ Quitar de favoritos' : '♡ Agregar a favoritos'}
+              </button>
+              {product.stock > 0 && (
+                <button className="btn btn-primary" onClick={handleAddToCart}>
+                  Agregar al carrito
+                </button>
+              )}
+            </div>
           )}
           {!user && (
             <p className="mt-3 text-muted">

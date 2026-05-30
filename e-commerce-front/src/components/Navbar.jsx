@@ -47,6 +47,13 @@ function Navbar() {
                   <Link className="nav-link px-3" to="/carrito" onClick={() => setIsOpen(false)}>Mi Carrito</Link>
                 </li>
               )}
+              {/* Este link aparece solamente si existe user.
+                  Es otro ejemplo de renderizado condicional. */}
+              {user && (
+                <li className="nav-item">
+                  <Link className="nav-link px-3" to="/favoritos" onClick={() => setIsOpen(false)}>Mis Favoritos</Link>
+                </li>
+              )}
             </ul>
             
             <ul className="navbar-nav ms-auto align-items-center">
